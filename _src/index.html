@@ -1,0 +1,7 @@
+<ul>
+    {{#each posts}}
+    {{#if_not_eq this.url '/'}}
+    <li><a href="{{this.url}}">{{this.title}}</a></li>
+    {{/if_not_eq}}
+    {{/each}}
+</ul>

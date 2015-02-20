@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BrowserSync HTTPS Support</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Building things with Javascript.">
+    <link rel="stylesheet" href="/css/main.css"/>
+</head>
+<body>
+<main class="page-content">
+    <div class="container">
+        <h2>BrowserSync HTTPS Support</h2>
+        <p>Things have <em>not</em> slowed since our recent <a href="http://www.wearejh.com/news/browsersync-2-0/">2.0 release</a> - along with keeping on top of 
+        small bug fixes and refining the codebase, we have also managed to implement a much-requested feature - HTTPS proxying.</p>
+        <p>The implications of this are huge if you are developing a website locally using SSL (with self-signed certs, or the real-deal) and need access your website
+        through https (such as <code>https://wordpress.dev:8890</code>, for example) - as it means you can now use BrowserSync in exactly the same as everyone else can.</p>
+        <p>We&#39;ve made it super-easy to use and there&#39;s no extra configuration needed - you just provide your secure address to the proxy option as you normally
+        would with BrowserSync. So, if you&#39;re using the command line, it&#39;s as simple as:</p>
+<pre><code class="lang-bash">$ browser-sync start --proxy=&quot;https://wordpress.dev:8890&quot;
+</code></pre>
+        <p>... or if you configure BrowserSync through Gulp, Grunt or the API it&#39;s as simple as this:</p>
+<pre><code class="lang-js">var browserSync = require(&quot;browser-sync&quot;);
+
+browserSync({
+    proxy: &quot;https://wordpress.dev:8890&quot;
+});
+</code></pre>
+        <p><img src="http://cl.ly/image/2l0B3h1N1b1J/Screen%20Shot%202015-02-19%20at%2017.26.26.png" alt="ss"></p>
+        <h2 id="how-does-it-work-">How does it work?</h2>
+        <p>BrowserSync ships with self-signed ssl certificates. When we spot a proxy target starting with <code>https</code>, we simply boot up a 
+        secure server instead of the regular one, and use those self-signed certificates to verify it. This will give present you with a
+        warning the first time you access the URL in a browser (as they are self-signed) - but given that BrowserSync is a development tool,
+        this is perfectly acceptable (plus, you can provide your own certificates, should you have them).</p>
+        <h2 id="full-https-support-across-the-board-">Full HTTPS support, across the board.</h2>
+        <p>One of the key benefits of using BrowserSync, is that behind the scenes we smooth over all of the differences between use-cases. We&#39;ve gone
+        to extreme lengths to ensure that HTTPS support works perfectly in all three modes - so whether you&#39;re serving static HTML files, proxying 
+        your own server, or even just copy/pasting the snippet into your code - you can benefit from this new feature.</p>
+        <p>Let&#39;s look at an example from each use-case to fully understand this new feature.</p>
+        <h3 id="static-files-https-support">Static files, https support</h3>
+        <p>If your website only requires static files, simple provide <code>https: true</code> in your configuration to enable
+         the secure server.</p>
+<pre><code>// Serve static files from the `./app` directory over HTTPS
+browserSync({
+    server: &quot;./app&quot;,
+    https: true
+});
+</code></pre><h3 id="proxy-https-support">Proxy https support</h3>
+        <p>As example, let&#39;s say you are building a Wordpress site, and you&#39;ve configured a <code>vhost</code> + <code>SSL</code> through Mamp pro.
+        The address you use locally to view website might be <code>https://wordpress.dev:8890</code>. To run BrowserSync against this
+        address, you simply provide the entire url as the proxy option.</p>
+        <p><strong>Note</strong>: You don&#39;t need to provide the <code>https</code> option here, as it&#39;s inferred from the proxy target.</p>
+<pre><code>// Proxy https://wordpress.dev:8890 over HTTPS
+browserSync({
+    proxy: &quot;https://wordpress.dev:8890&quot;
+});
+</code></pre><h3 id="snippet-https-support">Snippet https support</h3>
+        <p>A large number of BrowserSync users do not utilize the server or proxy options, and instead choose to 
+        copy/paste the html snippet into their website manually. Previously, if one of this websites where 
+        running over https, then BrowserSync snippet would simple not have worked (as the script would count as a 
+        <strong>http</strong> resource on a secure site, and would therefor be blocked by the browser).</p>
+        <p>Now in version 2.2, this is no longer a problem - all you need is the <code>https</code> option and you&#39;ll be good to go.</p>
+<pre><code>// Serve the BrowserSync script file over HTTPS
+browserSync({
+    https: true
+});
+</code></pre><h3 id="working-with-the-community">Working with the community</h3>
+        <p>This feature has been the direct result of people requesting it via <a href="https://twitter.com/browsersync">twitter</a> and on 
+        <a href="https://github.com/BrowserSync">github</a>. We are always open to feedback and suggestions and are happy to provide 
+        such features/changes that can help to improve the workflow for designers and developers. We are confident this big addition will 
+        be beneficial to a lot of people going forward and it&#39;s been our pleasure to work on implementing it.</p>
+
+    </div>
+</main>
+</body>
+</html>
